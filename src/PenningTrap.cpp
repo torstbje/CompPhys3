@@ -30,3 +30,22 @@ arma::vec PenningTrap::external_E_field(arma::vec r){
     e_field[2] *= -2;
     return e_field;
 }
+
+arma::vec PenningTrap::external_B_field(arma::vec r){
+    /*
+    Evaluates external magnetic field at given coordinates
+    */
+    arma::vec b_field(3);
+    b_field[2] = mag_field_strength;
+    return b_field;
+}
+
+arma::vec PenningTrap::force_particle(int i, int j){
+    /*
+    Evaluates interaction force between particles
+    */
+    double k_e = 1.389e5;
+    arma::vec diff = particles[i].pos - particles[j].pos;
+    arma::vec force = k_e*particles[i].charge*diff/(pow(abs(diff),3));
+    return force;
+}
