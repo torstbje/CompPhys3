@@ -12,6 +12,9 @@ int main(int argc, char const *argv[]){
 
     double q = 2.;
     double m = 3.;
+    double b0 = 9.65e1;
+    double v0 = 2.41e6;
+    double d = 500;
 
     arma::vec r = arma::vec(3);
     arma::vec v = arma::vec(3);
@@ -21,7 +24,8 @@ int main(int argc, char const *argv[]){
     }
 
     Particle p = Particle(q, m, r, v);
-    
+    PenningTrap trap = PenningTrap(b0,v0,d);
+    trap.add_particle(p);
 
     return 0;
 }

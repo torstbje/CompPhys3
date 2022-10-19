@@ -13,3 +13,7 @@ PenningTrap::PenningTrap(double b0, double v0, double d){
     potential = v0;
     dim = d;
 }
+
+void PenningTrap::add_particle(Particle p_in){
+    particles.push_back(p_in);
+}
