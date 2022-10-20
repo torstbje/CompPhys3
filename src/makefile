@@ -1,6 +1,7 @@
 all: compile execute
+
 compile:
-	g++ -o main.out main.cpp Particle.cpp PenningTrap.cpp -larmadillo -llapack -lblas
+	g++ -std=c++11 -o main.out main.cpp Particle.cpp PenningTrap.cpp -larmadillo -llapack -lblas
 
 execute:
 	./main.out
