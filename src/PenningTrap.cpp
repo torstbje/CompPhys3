@@ -129,7 +129,6 @@ void PenningTrap::evolve_RK4(double dt){
         k3v.push_back(total_force(i)/particles[i].mass);
         particles_copy[i].pos += k3r[i] * dt;
         particles_copy[i].vel += k3v[i] * dt;
-        
     }
     
     for (int i=0;i<N;i++) {
@@ -137,7 +136,6 @@ void PenningTrap::evolve_RK4(double dt){
         // k4
         k4r.push_back(particles_copy[i].vel);
         k4v.push_back(total_force(i)/particles[i].mass);
-        
     }
     
     for (int i = 0; i < N; i++){

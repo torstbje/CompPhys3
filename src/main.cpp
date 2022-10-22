@@ -1,5 +1,6 @@
 #include <iostream>
 #include <armadillo>
+#include <fstream>
 
 
 #include "headers/Particle.hpp"
@@ -58,13 +59,24 @@ int main(int argc, char const *argv[]){
 //    }
     
     // test time evolution
+    std::ofstream out_euler, out_rk4;
+//    std::string euler_file = "z_euler.txt";
+    std::string rk4_file = "z_rk4.txt";
+//    out_euler.open(euler_file);
+    out_rk4.open(rk4_file);
+    
+    double total_t = 50;
     double dt = 0.01;
-    for (int i=0; i<100 ;i++) {
+    for (int i=0; i<total_t/dt ;i++) {
+        // use rk4
         trap.evolve_RK4(dt);
-        cout << trap.particles[0].pos << endl;
+        out_rk4 << i*dt << "," << trap.particles[0].pos[2] << std::endl;
+        
+        // use euler
+//        trap.evolve_forward_Euler(dt);
+//        out_euler << i*dt << "," << trap.particles[0].pos[2] << std::endl;
     }
-     
-    // seems okay, now compare to rk4
+    
 
     return 0;
 }
