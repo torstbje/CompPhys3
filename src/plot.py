@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-filenames = ['textfiles/z_euler.txt', 'textfiles/z_rk4.txt']
+filenames = ['z_euler.txt', 'z_rk4.txt']
 
 for filename in filenames:
 	datas = pd.read_csv(filename, header=None)
