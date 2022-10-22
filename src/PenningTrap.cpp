@@ -12,6 +12,7 @@ PenningTrap::PenningTrap(double b0, double v0, double d){
     mag_field_strength = b0;
     potential = v0;
     dim = d;
+   
 }
 
 void PenningTrap::add_particle(Particle p_in){
@@ -25,8 +26,9 @@ arma::vec PenningTrap::external_E_field(arma::vec r){
     /*
     Evaluates external electric field at given coordinates
     */
-
-    arma::vec e_field = r*(potential/(dim*dim));
+    
+    double v0_d2 = 9.65;
+    arma::vec e_field = r*v0_d2;
     e_field[2] *= -2;
     return e_field;
 }
@@ -75,15 +77,18 @@ arma::vec PenningTrap::total_force_particles(int i){
     return int_force;
 }
 
-arma::vec PenningTrap::total_force(int i){
+arma::vec PenningTrap::total_force(int i, int is_interact){
     /*
     Evaluates total internal and external forces for particle i
     */
-    return total_force_external(i) + total_force_particles(i);
+    if (is_interact)
+        return total_force_external(i) + total_force_particles(i);
+//    std::cout << total_force_particles(i);
+    return total_force_external(i);
 }
 
 
-void PenningTrap::evolve_RK4(double dt){
+void PenningTrap::evolve_RK4(double dt, int is_interact){
     /*
     Evolves the system on timestep dt with the 'RungeKutta4' method
     */
@@ -98,12 +103,13 @@ void PenningTrap::evolve_RK4(double dt){
     std::vector<arma::vec> k1r, k2r, k3r, k4r;
     std::vector<arma::vec> k1v, k2v, k3v, k4v;
     
+        
     // calculates the k's for r and v
     for (int i = 0; i < N; i++){
         
         // k1
         k1r.push_back(particles_copy[i].vel);
-        k1v.push_back(total_force(i)/particles_copy[i].mass);
+        k1v.push_back(total_force(i, is_interact)/particles_copy[i].mass);
         
         // update the copied particles possitions
         particles_copy[i].pos += k1r[i] * dt/2;
@@ -115,7 +121,7 @@ void PenningTrap::evolve_RK4(double dt){
         
         // k2
         k2r.push_back(particles_copy[i].vel);
-        k2v.push_back(total_force(i)/particles[i].mass);
+        k2v.push_back(total_force(i, is_interact)/particles[i].mass);
         particles_copy[i].pos += k2r[i] * dt/2;
         particles_copy[i].vel += k2v[i] * dt/2;
        
@@ -126,7 +132,7 @@ void PenningTrap::evolve_RK4(double dt){
         
         // k3
         k3r.push_back(particles_copy[i].vel);
-        k3v.push_back(total_force(i)/particles[i].mass);
+        k3v.push_back(total_force(i, is_interact)/particles[i].mass);
         particles_copy[i].pos += k3r[i] * dt;
         particles_copy[i].vel += k3v[i] * dt;
     }
@@ -135,7 +141,7 @@ void PenningTrap::evolve_RK4(double dt){
         
         // k4
         k4r.push_back(particles_copy[i].vel);
-        k4v.push_back(total_force(i)/particles[i].mass);
+        k4v.push_back(total_force(i, is_interact)/particles[i].mass);
     }
     
     for (int i = 0; i < N; i++){
@@ -147,7 +153,7 @@ void PenningTrap::evolve_RK4(double dt){
 }
 
 
-void PenningTrap::evolve_forward_Euler(double dt) {
+void PenningTrap::evolve_forward_Euler(double dt, int is_interact) {
     /*
      Evolves the system on timestep dt with the 'Euler' method
      */
@@ -156,6 +162,6 @@ void PenningTrap::evolve_forward_Euler(double dt) {
         // update position
         particles[i].pos += particles[i].vel*dt;
         // update velocity
-        particles[i].vel += total_force(i) / particles[i].mass * dt;
+        particles[i].vel += total_force(i, is_interact) / particles[i].mass * dt;
     }
 }
