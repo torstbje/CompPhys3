@@ -26,6 +26,7 @@ int main(int argc, char const *argv[]){
     vec v = vec(3).randn() * 0.1 * trap.dim;  // random initial velocity
 
 
+    // particle 1
     vec r1 = vec(3);
     vec v1 = vec(3);
 
@@ -34,6 +35,7 @@ int main(int argc, char const *argv[]){
     v1[1] = 25;
 
 
+    // particle 2
     vec r2 = vec(3);
     vec v2 = vec(3);
 
@@ -51,9 +53,18 @@ int main(int argc, char const *argv[]){
 
     vec field = trap.force_particle(0,1);
 
-    for (int i = 0; i < 3; i++){
-        cout << r[i] << " , " << field[i] << endl;
+//    for (int i = 0; i < 3; i++){
+//        cout << r[i] << " , " << field[i] << endl;
+//    }
+    
+    // test time evolution
+    double dt = 0.01;
+    for (int i=0; i<100 ;i++) {
+        trap.evolve_RK4(dt);
+        cout << trap.particles[0].pos << endl;
     }
+     
+    // seems okay, now compare to rk4
 
     return 0;
 }

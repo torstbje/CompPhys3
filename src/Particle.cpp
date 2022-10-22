@@ -10,4 +10,5 @@ Particle::Particle(double q, double m, arma::vec r, arma::vec v){
     mass = m;
     pos = r;
     vel = v;
+
 }
