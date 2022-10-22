@@ -8,6 +8,8 @@
 
 using namespace arma;
 
+void time_evo(PenningTrap trap, double dt, double total_t, std::string filename, int part_int, int is_euler=0);
+
 int main(int argc, char const *argv[]){
     /*
     Main cpp file
@@ -58,25 +60,41 @@ int main(int argc, char const *argv[]){
 //        cout << r[i] << " , " << field[i] << endl;
 //    }
     
-    // test time evolution
-    std::ofstream out_euler, out_rk4;
-//    std::string euler_file = "z_euler.txt";
-    std::string rk4_file = "z_rk4.txt";
-//    out_euler.open(euler_file);
-    out_rk4.open(rk4_file);
+    // test time evolution for one particle for 50μs
+   
+    std::string euler_file = "textfiles/z_euler.txt";
+    std::string rk4_file = "textfiles/z_rk4.txt";
     
     double total_t = 50;
     double dt = 0.01;
-    for (int i=0; i<total_t/dt ;i++) {
-        // use rk4
-        trap.evolve_RK4(dt);
-        out_rk4 << i*dt << "," << trap.particles[0].pos[2] << std::endl;
-        
-        // use euler
-//        trap.evolve_forward_Euler(dt);
-//        out_euler << i*dt << "," << trap.particles[0].pos[2] << std::endl;
-    }
+    
+    time_evo(trap, dt, total_t, euler_file, 0, 1);
+    time_evo(trap, dt, total_t, rk4_file, 0, 0);
     
 
     return 0;
+}
+
+
+void time_evo(PenningTrap trap, double dt, double total_t, std::string filename, int part_int, int is_euler) {
+    /* evolves the system for the specified time without changing values in trap
+     inputs:
+     dt: time step size
+     total_t: total time run
+     filename: where to save the positions
+     part_int: which particle's z position to save
+     */
+    
+    std::ofstream outfile;
+    outfile.open(filename);
+    for (int i=0; i<total_t/dt ;i++) {
+        // use rk4
+        if (is_euler)
+            trap.evolve_forward_Euler(dt);
+        else
+            trap.evolve_RK4(dt);
+        
+        outfile << i*dt << "," << trap.particles[part_int].pos[2] << std::endl;
+
+    }
 }
