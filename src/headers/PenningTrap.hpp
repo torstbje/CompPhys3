@@ -1,13 +1,18 @@
-#ifndef BASETRAP_HPP
-#define BASETRAP_HPP
+#ifndef PENNINGTRAP_HPP
+#define PENNINGTRAP_HPP
 
 class BaseTrap{
+    /*
+    Abstract base class for the Penning Trap subclasses.
+    Contains virtual method for evolving the system.
+    */
 
 public:
 
     double mag_field_strength, potential;
     double dim;
     std::vector<Particle> particles;
+    std::string ode_type;
 
     // Constructor
   BaseTrap(double B0_in, double V0_in, double d_in);
@@ -36,24 +41,28 @@ public:
   // Pure virtual method for evolving the system one time step (dt)
   virtual void evolve(double dt, int is_interact) = 0;
 
-  virtual std::string ode_type() = 0;
 };
 
 // Child classes
+
 class PenningTrapEuler : public BaseTrap{
+    /*
+    Penning trap child class with Euler as method for evolving system.
+    */
 
 public:
-    PenningTrapEuler(double B0_in, double V0_in, double d_in) : BaseTrap(B0_in,V0_in,d_in){};
+    PenningTrapEuler(double B0_in, double V0_in, double d_in) : BaseTrap(B0_in,V0_in,d_in){ode_type = "euler";};
     void evolve(double dt, int is_interact);
-    std::string ode_type();
 };
 
 class PenningTrapRK4 : public BaseTrap{
+    /*
+    Penning trap child class with RK4 as method for evolving system.
+    */
 
 public:
-    PenningTrapRK4(double B0_in, double V0_in, double d_in) : BaseTrap(B0_in,V0_in,d_in){};
+    PenningTrapRK4(double B0_in, double V0_in, double d_in) : BaseTrap(B0_in,V0_in,d_in){ode_type = "rk4";};
     void evolve(double dt, int is_interact);
-    std::string ode_type();
 };
 
 #endif

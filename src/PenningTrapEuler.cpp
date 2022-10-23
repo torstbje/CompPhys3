@@ -4,9 +4,6 @@
 #include "headers/Particle.hpp"
 #include "headers/PenningTrap.hpp"
 
-std::string PenningTrapEuler::ode_type(){
-    return "euler";
-}
 
 void PenningTrapEuler::evolve(double dt, int is_interact) {
     /*

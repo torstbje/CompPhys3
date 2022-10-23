@@ -4,9 +4,6 @@
 #include "headers/Particle.hpp"
 #include "headers/PenningTrap.hpp"
 
-std::string PenningTrapRK4::ode_type(){
-    return "rk4";
-}
 
 void PenningTrapRK4::evolve(double dt, int is_interact){
     /*

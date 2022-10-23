@@ -56,13 +56,9 @@ int main(int argc, char const *argv[]){
 
     // test time evolution for one particle for time: 50μs
 
-    std::string euler_file = "textfiles/pos_euler.txt";
-    std::string rk4_file = "textfiles/pos_rk4.txt";
-
     double total_t = 50;
     double dt = 0.001;
 
-    std::string filenames_int, filenames_non;
     // euler
     time_evo(trap1, dt, total_t, 2, 1);
 
@@ -93,11 +89,10 @@ void time_evo(BaseTrap& trap, double dt, double total_t, int n_part, int is_inte
      */
 
 
-    std::string odetype = trap.ode_type();
+    //std::string odetype = trap.ode_type();
 
     std::ofstream outfile;
-    std::string filename = "textfiles/pos_" + trap.ode_type() + "_";
-    std::string filenames;
+    std::string filename = "textfiles/pos_" + trap.ode_type + "_";
 
 
     if (is_interact)
