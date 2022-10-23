@@ -1,9 +1,7 @@
-#ifndef PENNINGTRAP_HPP
-#define PENNINGTRAP_HPP
+#ifndef BASETRAP_HPP
+#define BASETRAP_HPP
 
-class PenningTrap{
-
-private:
+class BaseTrap{
 
 public:
 
@@ -12,7 +10,7 @@ public:
     std::vector<Particle> particles;
 
     // Constructor
-  PenningTrap(double B0_in, double V0_in, double d_in);
+  BaseTrap(double B0_in, double V0_in, double d_in);
 
   // Add a particle to the trap
   void add_particle(Particle p_in);
@@ -35,11 +33,27 @@ public:
   // The total force on particle_i from both external fields and other particles
   arma::vec total_force(int i, int is_interact);
 
-  // Evolve the system one time step (dt) using Runge-Kutta 4th order
-  void evolve_RK4(double dt, int is_interact);
+  // Pure virtual method for evolving the system one time step (dt)
+  virtual void evolve(double dt, int is_interact) = 0;
 
-  // Evolve the system one time step (dt) using Forward Euler
-  void evolve_forward_Euler(double dt, int is_interact);
+  virtual std::string ode_type() = 0;
+};
+
+// Child classes
+class PenningTrapEuler : public BaseTrap{
+
+public:
+    PenningTrapEuler(double B0_in, double V0_in, double d_in) : BaseTrap(B0_in,V0_in,d_in){};
+    void evolve(double dt, int is_interact);
+    std::string ode_type();
+};
+
+class PenningTrapRK4 : public BaseTrap{
+
+public:
+    PenningTrapRK4(double B0_in, double V0_in, double d_in) : BaseTrap(B0_in,V0_in,d_in){};
+    void evolve(double dt, int is_interact);
+    std::string ode_type();
 };
 
 #endif

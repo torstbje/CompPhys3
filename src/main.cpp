@@ -9,7 +9,7 @@
 using namespace arma;
 
 
-void time_evo(PenningTrap trap, double dt, double total_t, int part_int, int is_interact, int is_euler=0);
+void time_evo(BaseTrap &trap, double dt, double total_t, int part_int, int is_interact);
 
 int main(int argc, char const *argv[]){
     /*
@@ -23,7 +23,8 @@ int main(int argc, char const *argv[]){
     double d = 500;
 
 
-    PenningTrap trap = PenningTrap(b0,v0,d);
+    PenningTrapEuler trap1 = PenningTrapEuler(b0,v0,d);
+    PenningTrapRK4 trap2 = PenningTrapRK4(b0,v0,d);
 
 
     // particle 1
@@ -34,7 +35,9 @@ int main(int argc, char const *argv[]){
     r1[2] = 20;
     v1[1] = 25;
     Particle p1 = Particle(q, m, r1, v1);
-    trap.add_particle(p1);
+
+    trap1.add_particle(p1);
+    trap2.add_particle(p1);
 
 
     // particle 2
@@ -47,38 +50,36 @@ int main(int argc, char const *argv[]){
     v2[2] = 5;
 
     Particle p2 = Particle(q, m, r2, v2);
-    trap.add_particle(p2);
+    trap1.add_particle(p2);
+    trap2.add_particle(p2);
 
 
-
-    // test time evolution for one particle for 50μs
+    // test time evolution for one particle for time: 50μs
 
     std::string euler_file = "textfiles/pos_euler.txt";
     std::string rk4_file = "textfiles/pos_rk4.txt";
 
     double total_t = 50;
-//    double n_steps = 4000;
-//    double dt = total_t/n_steps;
     double dt = 0.001;
 
     std::string filenames_int, filenames_non;
     // euler
-    time_evo(trap, dt, total_t, 2, 1, 1);
+    time_evo(trap1, dt, total_t, 2, 1);
 
     // rk4
 
     // interaction
-    time_evo(trap, dt, total_t, 2, 1, 0);
+    time_evo(trap2, dt, total_t, 2, 1);
 
     // no interaction
-    time_evo(trap, dt, total_t, 2, 0, 0);
+    time_evo(trap2, dt, total_t, 2, 0);
 
     return 0;
 }
 
 
 // can be moved elsewhere
-void time_evo(PenningTrap trap, double dt, double total_t, int n_part, int is_interact, int is_euler) {
+void time_evo(BaseTrap& trap, double dt, double total_t, int n_part, int is_interact) {
     /* evolves the system for the specified time without changing values in trap,
      save the given particle's trajectory
      inputs:
@@ -88,23 +89,22 @@ void time_evo(PenningTrap trap, double dt, double total_t, int n_part, int is_in
      part_int: which particle's z position to save
 
      return:
-     vector of filenames
+     nothing / (vector of filenames)
      */
 
+
+    std::string odetype = trap.ode_type();
+
     std::ofstream outfile;
-    std::string filename = "textfiles/pos_";
+    std::string filename = "textfiles/pos_" + trap.ode_type() + "_";
     std::string filenames;
 
-
-    if (is_euler)
-        filename += "eul_";
-    else
-        filename += "rk4_";
 
     if (is_interact)
         filename += "int_";
     else
         filename += "non_";
+
 
     for (int i=0; i<n_part;i++) {
         outfile.open(filename + std::to_string(i) + ".txt");
@@ -114,28 +114,7 @@ void time_evo(PenningTrap trap, double dt, double total_t, int n_part, int is_in
 
     for (int i=0; i<total_t/dt; i++) {
 
-        // use rk4
-        if (is_interact) {
-            if (is_euler) {
-                trap.evolve_forward_Euler(dt, is_interact);
-                filename = "textfiles/pos_eul_int_";
-
-                
-            }
-            else {
-                trap.evolve_RK4(dt, is_interact);
-            }
-        }
-
-        else {
-            if (is_euler) {
-                trap.evolve_forward_Euler(dt, is_interact);
-                
-            }
-            else {
-                trap.evolve_RK4(dt, is_interact);
-            }
-        }
+        trap.evolve(dt,is_interact);
 
 
         for (int j=0; j<n_part; j++) {
