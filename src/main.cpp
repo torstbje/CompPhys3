@@ -128,24 +128,20 @@ void time_evo(PenningTrap trap, double dt, double total_t, int n_part, int is_in
         if (is_interact) {
             if (is_euler) {
                 trap.evolve_forward_Euler(dt, is_interact);
-                filename = "textfiles/pos_eul_int_";
                 
             }
             else {
                 trap.evolve_RK4(dt, is_interact);
-                filename = "textfiles/pos_rk4_int_";
             }
         }
         
         else {
             if (is_euler) {
                 trap.evolve_forward_Euler(dt, is_interact);
-                filename = "textfiles/pos_eul_non_";
                 
             }
             else {
                 trap.evolve_RK4(dt, is_interact);
-                filename = "textfiles/pos_rk4_non_";
             }
         }
         
