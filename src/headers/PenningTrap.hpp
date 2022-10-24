@@ -51,7 +51,7 @@ class PenningTrapEuler : public BaseTrap{
     */
 
 public:
-    PenningTrapEuler(double B0_in, double V0_in, double d_in) : BaseTrap(B0_in,V0_in,d_in){ode_type = "euler";};
+    PenningTrapEuler(double B0_in, double V0_in, double d_in) : BaseTrap(B0_in,V0_in,d_in){ode_type = "eul";};
     void evolve(double dt, int is_interact);
 };
 
