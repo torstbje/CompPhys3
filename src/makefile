@@ -1,7 +1,7 @@
 all: compile execute
 
 compile:
-	g++ -std=c++17 -o main.out main.cpp Particle.cpp BaseTrap.cpp PenningTrapRK4.cpp PenningTrapEuler.cpp -larmadillo -llapack -lblas
+	g++ -std=c++17 -o main.out main.cpp Particle.cpp PenningTrap.cpp -larmadillo -llapack -lblas
 
 execute: euler rk4 euler_non rk4_non
 

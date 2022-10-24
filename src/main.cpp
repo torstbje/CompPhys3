@@ -9,7 +9,7 @@
 using namespace arma;
 
 
-void time_evo(BaseTrap &trap, double dt, double total_t);
+void time_evo(PenningTrap &trap, double dt, double total_t);
 
 int main(int argc, char const *argv[]){
     /*
@@ -17,7 +17,7 @@ int main(int argc, char const *argv[]){
     */
 
     if (argc < 3){
-        std::cout << "Include parameter for method you doofus";
+        std::cout << "Include parameters for method and interactions you doofus";
         return 1;
     }
 
@@ -58,28 +58,18 @@ int main(int argc, char const *argv[]){
     double total_t = 50;
     double dt = 0.001;
 
-
-    if (method == "eul"){
-        PenningTrapEuler trap = PenningTrapEuler(b0,v0,d,is_interact);
-        trap.add_particle(p1);
-        trap.add_particle(p2);
-        time_evo(trap, dt, total_t);
-    }
-
-    if (method == "rk4"){
-        PenningTrapRK4 trap = PenningTrapRK4(b0,v0,d,is_interact);
-        trap.add_particle(p1);
-        trap.add_particle(p2);
-        time_evo(trap, dt, total_t);
-    }
+    PenningTrap trap = PenningTrap(b0,v0,d,is_interact,method);
+    trap.add_particle(p1);
+    trap.add_particle(p2);
+    time_evo(trap, dt, total_t);
 
     return 0;
 }
 
 
 // can be moved elsewhere
-void time_evo(BaseTrap& trap, double dt, double total_t) {
-    /* evolves the system for the specified time without changing values in trap,
+void time_evo(PenningTrap& trap, double dt, double total_t) {
+    /* evolves the system for the specified time,
      save the given particle's trajectory
      inputs:
      trap: PenningTrap object
@@ -109,7 +99,6 @@ void time_evo(BaseTrap& trap, double dt, double total_t) {
     for (int i=0; i<total_t/dt; i++) {
 
         trap.evolve(dt);
-
 
         for (int j=0; j<n_part; j++) {
 

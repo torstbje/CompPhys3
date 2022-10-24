@@ -1,10 +1,9 @@
 #ifndef PENNINGTRAP_HPP
 #define PENNINGTRAP_HPP
 
-class BaseTrap{
+class PenningTrap{
     /*
-    Abstract base class for the Penning Trap subclasses.
-    Contains virtual method for evolving the system.
+    PenningTrap object for storing charged particles
     */
 
 public:
@@ -14,11 +13,13 @@ public:
     std::vector<Particle> particles;
     std::string ode_type;
     bool is_interact;
-    typedef arma::vec (BaseTrap::*force_pointer)(int i);
+    typedef arma::vec (PenningTrap::*force_pointer)(int i);
+    typedef void (PenningTrap::*evolve_pointer)(double dt);
     force_pointer force_func;
+    evolve_pointer evolve_func;
 
     // Constructor
-  BaseTrap(double B0_in, double V0_in, double d_in, bool interact);
+  PenningTrap(double B0_in, double V0_in, double d_in, bool interact, std::string method);
 
   // Add a particle to the trap
   void add_particle(Particle p_in);
@@ -45,30 +46,10 @@ public:
   arma::vec total_force(int i);
 
   // Pure virtual method for evolving the system one time step (dt)
-  virtual void evolve(double dt) = 0;
+  void evolve(double dt);
+  void evolve_Euler(double dt);
+  void evolve_RK4(double dt);
 
-};
-
-// Child classes
-
-class PenningTrapEuler : public BaseTrap{
-    /*
-    Penning trap child class with Euler as method for evolving system.
-    */
-
-public:
-    PenningTrapEuler(double B0_in, double V0_in, double d_in, bool interact) : BaseTrap(B0_in,V0_in,d_in,interact){ode_type = "eul";};
-    void evolve(double dt);
-};
-
-class PenningTrapRK4 : public BaseTrap{
-    /*
-    Penning trap child class with RK4 as method for evolving system.
-    */
-
-public:
-    PenningTrapRK4(double B0_in, double V0_in, double d_in, bool interact) : BaseTrap(B0_in,V0_in,d_in,interact){ode_type = "rk4";};
-    void evolve(double dt);
 };
 
 #endif
