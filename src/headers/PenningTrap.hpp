@@ -6,6 +6,12 @@ class PenningTrap{
     PenningTrap object for storing charged particles
     */
 
+private:
+    typedef arma::vec (PenningTrap::*force_pointer)(int i);
+    typedef void (PenningTrap::*evolve_pointer)(double dt);
+    force_pointer force_func;
+    evolve_pointer evolve_func;
+
 public:
 
     double mag_field_strength, potential;
@@ -13,10 +19,7 @@ public:
     std::vector<Particle> particles;
     std::string ode_type;
     bool is_interact;
-    typedef arma::vec (PenningTrap::*force_pointer)(int i);
-    typedef void (PenningTrap::*evolve_pointer)(double dt);
-    force_pointer force_func;
-    evolve_pointer evolve_func;
+
 
     // Constructor
   PenningTrap(double B0_in, double V0_in, double d_in, bool interact, std::string method);
@@ -45,9 +48,13 @@ public:
   // The total force on particle_i from both external fields and other particles
   arma::vec total_force(int i);
 
-  // Pure virtual method for evolving the system one time step (dt)
+  // Method for evolving the system one time step (dt)
   void evolve(double dt);
+
+  // This method is used for evolve if method = "eul"
   void evolve_Euler(double dt);
+
+  // This method is used for evolve otherwise (method != "eul")
   void evolve_RK4(double dt);
 
 };
