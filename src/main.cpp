@@ -9,7 +9,7 @@
 using namespace arma;
 
 
-void time_evo(BaseTrap &trap, double dt, double total_t, int part_int, int is_interact);
+void time_evo(BaseTrap &trap, double dt, double total_t);
 
 int main(int argc, char const *argv[]){
     /*
@@ -22,8 +22,7 @@ int main(int argc, char const *argv[]){
     }
 
     std::string method = argv[1];
-    int temp = atoi(argv[2]);
-    bool is_interact = (temp == 1);
+    bool is_interact = (atoi(argv[2]) == 1);
 
     double q = 1.;
     double m = 1.;
@@ -64,14 +63,14 @@ int main(int argc, char const *argv[]){
         PenningTrapEuler trap = PenningTrapEuler(b0,v0,d,is_interact);
         trap.add_particle(p1);
         trap.add_particle(p2);
-        time_evo(trap, dt, total_t, 2, is_interact);
+        time_evo(trap, dt, total_t);
     }
 
     if (method == "rk4"){
         PenningTrapRK4 trap = PenningTrapRK4(b0,v0,d,is_interact);
         trap.add_particle(p1);
         trap.add_particle(p2);
-        time_evo(trap, dt, total_t, 2, is_interact);
+        time_evo(trap, dt, total_t);
     }
 
     return 0;
@@ -79,30 +78,26 @@ int main(int argc, char const *argv[]){
 
 
 // can be moved elsewhere
-void time_evo(BaseTrap& trap, double dt, double total_t, int n_part, int is_interact) {
+void time_evo(BaseTrap& trap, double dt, double total_t) {
     /* evolves the system for the specified time without changing values in trap,
      save the given particle's trajectory
      inputs:
+     trap: PenningTrap object
      dt: time step size
      total_t: total time run
-     filename: where to save the positions
-     part_int: which particle's z position to save
-
-     return:
-     nothing / (vector of filenames)
      */
 
+    int n_part = trap.particles.size();
 
     std::ofstream outfile;
     std::string filename = "textfiles/pos_" + trap.ode_type + "_";
 
 
-    if (is_interact){
+    if (trap.is_interact){
         filename += "int_";
     }   else    {
         filename += "non_";
     }
-
 
 
     for (int i=0; i<n_part;i++) {

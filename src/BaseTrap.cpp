@@ -15,6 +15,7 @@ BaseTrap::BaseTrap(double b0, double v0, double d, bool interact){
     dim = d;
     is_interact = interact;
 
+    // This block decides which forces are used for the system
     if (is_interact){
         force_func = &BaseTrap::combine_force;
     }
@@ -95,15 +96,10 @@ arma::vec BaseTrap::combine_force(int i){
 
 arma::vec BaseTrap::total_force(int i){
     /*
-    Evaluates total internal and external forces for particle i
+    Evaluates the relevant forces for particle i.
+    Method for relevant forces is declared at initialization.
+    One of 'combine_force' or 'total_force_external' is used.
     */
 
     return (this->*force_func)(i);
-
-    /*
-    if (is_interact)
-        return combine_force(i);
-
-    return total_force_external(i);
-    */
 }
