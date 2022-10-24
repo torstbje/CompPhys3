@@ -5,7 +5,7 @@
 #include "headers/PenningTrap.hpp"
 
 
-void PenningTrapRK4::evolve(double dt, int is_interact){
+void PenningTrapRK4::evolve(double dt){
     /*
     Evolves the system one timestep dt with the 'RungeKutta4' method
     */
@@ -26,7 +26,7 @@ void PenningTrapRK4::evolve(double dt, int is_interact){
 
         // k1
         k1r.push_back(particles_copy[i].vel);
-        k1v.push_back(total_force(i, is_interact)/particles_copy[i].mass);
+        k1v.push_back(total_force(i)/particles_copy[i].mass);
 
         // update the copied particles possitions
         particles_copy[i].pos += k1r[i] * dt/2;
@@ -38,7 +38,7 @@ void PenningTrapRK4::evolve(double dt, int is_interact){
 
         // k2
         k2r.push_back(particles_copy[i].vel);
-        k2v.push_back(total_force(i, is_interact)/particles[i].mass);
+        k2v.push_back(total_force(i)/particles[i].mass);
         particles_copy[i].pos += k2r[i] * dt/2;
         particles_copy[i].vel += k2v[i] * dt/2;
 
@@ -49,7 +49,7 @@ void PenningTrapRK4::evolve(double dt, int is_interact){
 
         // k3
         k3r.push_back(particles_copy[i].vel);
-        k3v.push_back(total_force(i, is_interact)/particles[i].mass);
+        k3v.push_back(total_force(i)/particles[i].mass);
         particles_copy[i].pos += k3r[i] * dt;
         particles_copy[i].vel += k3v[i] * dt;
     }
@@ -58,7 +58,7 @@ void PenningTrapRK4::evolve(double dt, int is_interact){
 
         // k4
         k4r.push_back(particles_copy[i].vel);
-        k4v.push_back(total_force(i, is_interact)/particles[i].mass);
+        k4v.push_back(total_force(i)/particles[i].mass);
     }
 
     for (int i = 0; i < N; i++){

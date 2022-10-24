@@ -16,15 +16,20 @@ int main(int argc, char const *argv[]){
     Main cpp file
     */
 
+    if (argc < 3){
+        std::cout << "Include parameter for method you doofus";
+        return 1;
+    }
+
+    std::string method = argv[1];
+    int temp = atoi(argv[2]);
+    bool is_interact = (temp == 1);
+
     double q = 1.;
     double m = 1.;
     double b0 = 96.4852558;
     double v0 = 2.41e6;
     double d = 500;
-
-
-    PenningTrapEuler trap1 = PenningTrapEuler(b0,v0,d);
-    PenningTrapRK4 trap2 = PenningTrapRK4(b0,v0,d);
 
 
     // particle 1
@@ -35,9 +40,6 @@ int main(int argc, char const *argv[]){
     r1[2] = 20;
     v1[1] = 25;
     Particle p1 = Particle(q, m, r1, v1);
-
-    trap1.add_particle(p1);
-    trap2.add_particle(p1);
 
 
     // particle 2
@@ -50,8 +52,6 @@ int main(int argc, char const *argv[]){
     v2[2] = 5;
 
     Particle p2 = Particle(q, m, r2, v2);
-    trap1.add_particle(p2);
-    trap2.add_particle(p2);
 
 
     // test time evolution for one particle for time: 50μs
@@ -59,16 +59,20 @@ int main(int argc, char const *argv[]){
     double total_t = 50;
     double dt = 0.001;
 
-    // euler
-    time_evo(trap1, dt, total_t, 2, 1);
 
-    // rk4
+    if (method == "eul"){
+        PenningTrapEuler trap = PenningTrapEuler(b0,v0,d,is_interact);
+        trap.add_particle(p1);
+        trap.add_particle(p2);
+        time_evo(trap, dt, total_t, 2, is_interact);
+    }
 
-    // interaction
-    time_evo(trap2, dt, total_t, 2, 1);
-
-    // no interaction
-    time_evo(trap2, dt, total_t, 2, 0);
+    if (method == "rk4"){
+        PenningTrapRK4 trap = PenningTrapRK4(b0,v0,d,is_interact);
+        trap.add_particle(p1);
+        trap.add_particle(p2);
+        time_evo(trap, dt, total_t, 2, is_interact);
+    }
 
     return 0;
 }
@@ -89,16 +93,16 @@ void time_evo(BaseTrap& trap, double dt, double total_t, int n_part, int is_inte
      */
 
 
-    //std::string odetype = trap.ode_type();
-
     std::ofstream outfile;
     std::string filename = "textfiles/pos_" + trap.ode_type + "_";
 
 
-    if (is_interact)
+    if (is_interact){
         filename += "int_";
-    else
+    }   else    {
         filename += "non_";
+    }
+
 
 
     for (int i=0; i<n_part;i++) {
@@ -109,7 +113,7 @@ void time_evo(BaseTrap& trap, double dt, double total_t, int n_part, int is_inte
 
     for (int i=0; i<total_t/dt; i++) {
 
-        trap.evolve(dt,is_interact);
+        trap.evolve(dt);
 
 
         for (int j=0; j<n_part; j++) {

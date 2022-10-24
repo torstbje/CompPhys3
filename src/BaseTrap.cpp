@@ -4,13 +4,23 @@
 #include "headers/Particle.hpp"
 #include "headers/PenningTrap.hpp"
 
-BaseTrap::BaseTrap(double b0, double v0, double d){
+
+
+BaseTrap::BaseTrap(double b0, double v0, double d, bool interact){
     /*
     Initializer for PenningTrap class
     */
     mag_field_strength = b0;
     potential = v0;
     dim = d;
+    is_interact = interact;
+
+    if (is_interact){
+        force_func = &BaseTrap::combine_force;
+    }
+    else {
+        force_func = &BaseTrap::total_force_external;
+    }
 
 }
 
@@ -76,12 +86,24 @@ arma::vec BaseTrap::total_force_particles(int i){
     return int_force;
 }
 
-arma::vec BaseTrap::total_force(int i, int is_interact){
+arma::vec BaseTrap::combine_force(int i){
+    /*
+    Evaluates force on a given particle from interactions with all other particles in the system
+    */
+    return total_force_external(i) + total_force_particles(i);
+}
+
+arma::vec BaseTrap::total_force(int i){
     /*
     Evaluates total internal and external forces for particle i
     */
+
+    return (this->*force_func)(i);
+
+    /*
     if (is_interact)
-        return total_force_external(i) + total_force_particles(i);
+        return combine_force(i);
 
     return total_force_external(i);
+    */
 }
