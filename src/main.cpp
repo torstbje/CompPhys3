@@ -22,7 +22,7 @@ int main(int argc, char const *argv[]){
     }
 
     std::string method = argv[1];
-    bool is_interact = (atoi(argv[2]) == 1);
+    std::string is_interact = argv[2];
 
     double q = 1.;
     double m = 1.;
@@ -80,15 +80,7 @@ void time_evo(PenningTrap& trap, double dt, double total_t) {
     int n_part = trap.particles.size();
 
     std::ofstream outfile;
-    std::string filename = "textfiles/pos_" + trap.ode_type + "_";
-
-
-    if (trap.is_interact){
-        filename += "int_";
-    }   else    {
-        filename += "non_";
-    }
-
+    std::string filename = "textfiles/" + trap.file_string + "pos_";
 
     for (int i=0; i<n_part;i++) {
         outfile.open(filename + std::to_string(i) + ".txt");

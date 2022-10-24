@@ -6,13 +6,13 @@ compile:
 execute: euler rk4 euler_non rk4_non
 
 euler:
-	./main.out eul 1
+	./main.out eul int
 
 rk4:
-	./main.out rk4 1
+	./main.out rk4 int
 
 euler_non:
-	./main.out eul 0
+	./main.out eul non
 
 rk4_non:
-	./main.out rk4 0
+	./main.out rk4 non

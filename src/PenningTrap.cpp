@@ -6,25 +6,25 @@
 
 
 
-PenningTrap::PenningTrap(double b0, double v0, double d, bool interact, std::string method){
+PenningTrap::PenningTrap(double b0, double v0, double d, std::string is_interact, std::string method){
     /*
     Initializer for PenningTrap class
     */
     mag_field_strength = b0;
     potential = v0;
     dim = d;
-    is_interact = interact;
-    ode_type = method;
+    file_string = method + "_" + is_interact + "_";
 
     // This block decides which forces are used for the system
-    if (is_interact){
+    if (is_interact == "int"){
         force_func = &PenningTrap::combine_force;
     }
     else {
         force_func = &PenningTrap::total_force_external;
     }
 
-    if (ode_type == "eul"){
+    // This block decides how the system is updated
+    if (method == "eul"){
         evolve_func = &PenningTrap::evolve_Euler;
     } else {
         evolve_func = &PenningTrap::evolve_RK4;

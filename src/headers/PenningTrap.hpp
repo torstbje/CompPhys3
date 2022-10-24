@@ -17,12 +17,11 @@ public:
     double mag_field_strength, potential;
     double dim;
     std::vector<Particle> particles;
-    std::string ode_type;
-    bool is_interact;
+    std::string file_string;
 
 
     // Constructor
-  PenningTrap(double B0_in, double V0_in, double d_in, bool interact, std::string method);
+  PenningTrap(double B0_in, double V0_in, double d_in, std::string is_interact, std::string method);
 
   // Add a particle to the trap
   void add_particle(Particle p_in);
