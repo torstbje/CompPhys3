@@ -19,7 +19,7 @@ def plt_zvt():
 		data = pd.read_csv(filename, header=None)
 		plt.plot(data[0], data[3], label=filename[14:-6])
 
-	set_paras('time($\mu s$)','z position($\mu m$)','z position vs time $dt=0.01\mu s$','z,dt=0.01.pdf', file_dir, has_label=True)
+	set_paras('time($\mu s$)','z position($\mu m$)','z position vs time $dt=0.01\mu s$','z_dt=0_01', file_dir, has_label=True)
 
 
 plt_zvt()
@@ -66,14 +66,14 @@ def plt_xy():
 		int_data = pd.read_csv('textfiles/rk4_int_' + str(part_id) + '.txt', header=None)
 		plt.plot(int_data[1],int_data[2],label='int'+str(part_id))
 
-	set_paras('x($\mu m$)','y($\mu m$)','trajectory in x-y plane with interactions', 'x-y_int.pdf', file_dir, has_label=True)
+	set_paras('x($\mu m$)','y($\mu m$)','trajectory in x-y plane with interactions', 'x-y_int', file_dir, has_label=True)
 	plt.axis('equal')
 
 	for part_id in range(n_parts):
 		non_data = pd.read_csv('textfiles/rk4_non_' + str(part_id) + '.txt', header=None)
 		plt.plot(non_data[1],non_data[2],label='non'+str(part_id))
 
-	set_paras('x($\mu m$)','y($\mu m$)','trajectory in x-y plane without interactions', 'x-y_non.pdf', file_dir, has_label=True)
+	set_paras('x($\mu m$)','y($\mu m$)','trajectory in x-y plane without interactions', 'x-y_non', file_dir, has_label=True)
 	plt.axis('equal')
 
 
