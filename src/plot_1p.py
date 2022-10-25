@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import sys
 
 
-if len(sys.argv < 3):
+if len(sys.argv) < 3:
     print("You're missing parameters!")
 
 method = sys.argv[1]
