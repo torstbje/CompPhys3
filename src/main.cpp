@@ -78,33 +78,28 @@ void time_evo(PenningTrap& trap, double dt, double total_t) {
      */
 
     int n_part = trap.particles.size();
+    std::vector<std::ofstream> outfiles;
 
-    std::ofstream outfile;
-    std::string filename = "textfiles/" + trap.file_string + "pos_";
-
-    for (int i=0; i<n_part;i++) {
-        outfile.open(filename + std::to_string(i) + ".txt");
-        outfile.close();
+    // Make outfiles and write initial values
+    for (int j=0; j<n_part; j++) {
+        outfiles.emplace_back(std::ofstream{ trap.file_string + std::to_string(j) + ".txt" });
+        outfiles[j] << 0 << trap.particles[j].get_string() << std::endl;
     }
 
-
-    for (int i=0; i<total_t/dt; i++) {
+    // Update trap and write data to file
+    for (int i=1; i < total_t/dt;i++) {
 
         trap.evolve(dt);
 
         for (int j=0; j<n_part; j++) {
-
-            std::string new_filename = filename + std::to_string(j) + ".txt";
-            outfile.open(new_filename, ios::out | ios::app);
-
-            outfile << i*dt << "," << trap.particles[j].pos[0] << "," <<
-            trap.particles[j].pos[1] << "," << trap.particles[j].pos[2]
-            << std::endl;
-
-            outfile.close();
+            outfiles[j] << i*dt << trap.particles[j].get_string() << std::endl;
         }
 
     }
 
+    // close files
+    for (int j=0; j<n_part;j++) {
+        outfiles[j].close();
+    }
 
 }

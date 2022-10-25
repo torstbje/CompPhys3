@@ -13,7 +13,7 @@ PenningTrap::PenningTrap(double b0, double v0, double d, std::string is_interact
     mag_field_strength = b0;
     potential = v0;
     dim = d;
-    file_string = method + "_" + is_interact + "_";
+    file_string = "textfiles/" + method + "_" + is_interact + "_";
 
     // This block decides which forces are used for the system
     if (is_interact == "int"){

@@ -11,6 +11,7 @@ public:
     arma::vec pos, vel;
 
     Particle(double, double, arma::vec, arma::vec);
+    std::string get_string();
 };
 
 #endif
