@@ -16,11 +16,12 @@ int main(int argc, char const *argv[]){
     Main cpp file
     */
 
-    if (argc < 5){
+    if (argc < 6){
         std::cout << "\nMissing input parameters! (" << argc - 1 << " parameters was included.) \n"
         "Necessary parameters:\n"
         "-Method ('eul'/'rk4') \n"
         "-Interactions ('0'/'1') \n"
+        "-Number of particles ('1','2') \n"
         "-Total time (in micro seconds) \n"
         "-Number of time steps (integer) \n";
         return 1;
@@ -28,14 +29,25 @@ int main(int argc, char const *argv[]){
 
     std::string method = argv[1];
     std::string is_interact = argv[2];
-    double total_t = std::stod(argv[3]);
-    int n = atoi(argv[4]);
+    int n_part = atoi(argv[3]);
+    double total_t = std::stod(argv[4]);
+    int n = atoi(argv[5]);
+
+
+    if (n_part != 1 && n_part != 2){
+        std::cout << "Wrong number of particles! Use 1 or 2";
+        return 1;
+    }
 
     double q = 1.;
     double m = 1.;
     double b0 = 96.4852558;
     double v0 = 2.41e6;
     double d = 500;
+
+
+    // Trap
+    PenningTrap trap = PenningTrap(b0,v0,d,is_interact,method);
 
 
     // Particle 1
@@ -46,23 +58,25 @@ int main(int argc, char const *argv[]){
     r1[2] = 20;
     v1[1] = 25;
     Particle p1 = Particle(q, m, r1, v1);
+    trap.add_particle(p1);
 
 
     // Particle 2
-    vec r2 = vec(3);
-    vec v2 = vec(3);
+    if (n_part > 1){
+        vec r2 = vec(3);
+        vec v2 = vec(3);
 
-    r2[0] = 25;
-    r2[1] = 25;
-    v2[1] = 40;
-    v2[2] = 5;
+        r2[0] = 25;
+        r2[1] = 25;
+        v2[1] = 40;
+        v2[2] = 5;
 
-    Particle p2 = Particle(q, m, r2, v2);
+        Particle p2 = Particle(q, m, r2, v2);
+        trap.add_particle(p2);
+    }
 
-    // Trap
-    PenningTrap trap = PenningTrap(b0,v0,d,is_interact,method);
-    trap.add_particle(p1);
-    trap.add_particle(p2);
+
+
 
     // Evolve system and write to files
     time_evo(trap, total_t, n);
