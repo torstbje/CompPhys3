@@ -3,7 +3,7 @@ all: compile execute
 compile:
 	g++ -std=c++17 -o main.out main.cpp Particle.cpp PenningTrap.cpp -larmadillo -llapack -lblas
 
-execute: 1p 2p
+execute: 1p 2p 1p_err
 
 
 1p:
