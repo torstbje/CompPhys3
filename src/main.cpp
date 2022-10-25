@@ -95,7 +95,7 @@ void time_evo(PenningTrap& trap, double total_t, int n_steps) {
      */
 
     double dt = total_t/n_steps;
-    int n_part = trap.particles.size();
+    int n_part = int(trap.particles.size());
     std::vector<std::ofstream> outfiles;
 
     // Make outfiles and write initial values
