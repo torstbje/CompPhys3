@@ -5,9 +5,9 @@ import sys
 
 
 method = sys.argv[1]
-filename = 'textfiles/' + method + '_non_0.txt'
+n = sys.argv[2]
+filename = 'textfiles/' + method + '_non_' + n + '_0.txt'
 
 data = pd.read_csv(filename, header=None)
-n = str(len(data))
 plt.plot(data[0], data[3])
-set_paras('t($\mu s$)','z($\mu m$)','z-position vs time (' + n + ' iterations)','z_' + method + '_' + n)
+set_paras('t($\mu s$)','z($\mu m$)','z-position vs time (' + n + ' iterations)', 'z_' + method + '_' + n)

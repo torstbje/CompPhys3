@@ -22,16 +22,17 @@ int main(int argc, char const *argv[]){
         "-Method ('eul'/'rk4') \n"
         "-Interactions ('0'/'1') \n"
         "-Number of particles ('1','2') \n"
-        "-Total time (in micro seconds) \n"
-        "-Number of time steps (integer) \n";
+        "-Number of time steps (integer) \n"
+        "-Total time (in micro seconds) \n";
         return 1;
     }
 
     std::string method = argv[1];
     std::string is_interact = argv[2];
     int n_part = atoi(argv[3]);
-    double total_t = std::stod(argv[4]);
-    int n = atoi(argv[5]);
+    int n_steps = atoi(argv[4]);
+    double total_t = std::stod(argv[5]);
+
 
 
     if (n_part != 1 && n_part != 2){
@@ -76,10 +77,8 @@ int main(int argc, char const *argv[]){
     }
 
 
-
-
     // Evolve system and write to files
-    time_evo(trap, total_t, n);
+    time_evo(trap, total_t, n_steps);
 
     return 0;
 }
@@ -101,7 +100,7 @@ void time_evo(PenningTrap& trap, double total_t, int n_steps) {
 
     // Make outfiles and write initial values
     for (int j=0; j<n_part; j++) {
-        outfiles.emplace_back(std::ofstream{ trap.file_string + std::to_string(j) + ".txt" });
+        outfiles.emplace_back(std::ofstream{ trap.file_string + std::to_string(n_steps) + '_'+ std::to_string(j) + ".txt" });
         outfiles[j] << 0 << trap.particles[j].get_string() << std::endl;
     }
 
