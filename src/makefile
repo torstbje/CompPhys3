@@ -21,3 +21,10 @@ execute: 1p 2p
 	python3 plot_2p.py eul int 32000
 	python3 plot_2p.py rk4 non 32000
 	python3 plot_2p.py rk4 int 32000
+
+1p_err:
+	./main.out eul non 1 4000 50
+	./main.out eul non 1 8000 50
+	./main.out eul non 1 16000 50
+	./main.out eul non 1 32000 50
+	python3 plot_rel_error.py eul 

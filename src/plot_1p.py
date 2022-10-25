@@ -4,6 +4,9 @@ import matplotlib.pyplot as plt
 import sys
 
 
+if len(sys.argv < 3):
+    print("You're missing parameters!")
+
 method = sys.argv[1]
 n = sys.argv[2]
 filename = 'textfiles/' + method + '_non_' + n + '_0.txt'
