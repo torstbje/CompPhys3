@@ -23,8 +23,14 @@ execute: 1p 2p
 	python3 plot_2p.py rk4 int 32000
 
 1p_err:
-	./main.out eul non 1 4000 50
-	./main.out eul non 1 8000 50
-	./main.out eul non 1 16000 50
-	./main.out eul non 1 32000 50
-	python3 plot_rel_error.py eul 
+	./main.out rk4 non 1 4000 5
+	./main.out rk4 non 1 8000 5
+	./main.out rk4 non 1 16000 5
+	./main.out rk4 non 1 32000 5
+	python3 plot_rel_error.py rk4
+
+	./main.out eul non 1 4000 5
+	./main.out eul non 1 8000 5
+	./main.out eul non 1 16000 5
+	./main.out eul non 1 32000 5
+	python3 plot_rel_error.py eul

@@ -1,44 +1,32 @@
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 import sys
-
-MAX_TIME = 50
-
-q = 1
-m = 1
-B0 = 96.5 
-v0 = 25
-vod2 = 9.65 # V_0/d^2
-
-x0 = 20
-z0 = 20
-w0 = q*B0/m
-wz = np.sqrt(2*q*vod2/m)
+from analytical import analytical
+from set_paras import set_paras
 
 if len(sys.argv) < 2:
     print("You're missing parameters!")
 
 method = sys.argv[1]
-step_sizes = ['4000','8000','16000','32000']
+step_sizes = [4000,8000,16000,32000]
 
 filename = 'textfiles/' + method + '_non_'
 
+max_diff = []
 
-data = [pd.read_csv(filename + step + '_0.txt', header=None) for steps in step_sizes]
+for steps in step_sizes:
+    r_sim = pd.read_csv(filename + str(steps) + '_0.txt',usecols = [1,2,3], header=None)
+    t, r_ana = analytical(steps)
 
-def analytical(step_size):
+    diff = np.mean(abs(r_sim - r_ana), axis = 1)
+    err = diff/np.mean(abs(r_ana),axis = 1)
+    plt.plot(t,np.log(err), label = 'Steps = ' + str(steps))
+    max_diff.append(max(diff))
 
-    
-    wp = (w0+np.sqrt(w0**2-2*wz**2))/2
-    wm = (w0-np.sqrt(w0**2-2*wz**2))/2
-    Ap = (v0+wm*x0)/(wm-wp)
-    Am = -(v0+wp*x0)/(wm-wp)
+set_paras('t($\mu s$)','Error','Relative error of position over time for different step sizes', 'rel_error_' + method + '_')
 
 
-    t = np.arange(0,MAX_TIME,MAX_TIME/step_size)
-    x = Ap*np.cos(-wp*t)+Am*np.cos(-wm*t)
-    y = Ap*np.sin(-wp*t)+Am*np.sin(-wm*t)
-    z = np.cos(wz*t)
 
-    return x,y,z
-
+error_converge = sum([np.log(max_diff[i+1]/max_diff[i])/np.log(step_sizes[i+1]/step_sizes[i]) for i in range(3)])/3
+print("Error convergence with " + method + " method = ", error_converge)
