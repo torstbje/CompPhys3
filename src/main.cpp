@@ -41,7 +41,7 @@ int main(int argc, char const *argv[]){
     }
 
     double q = 1.;
-    double m = 1.;
+    double m = 40.;
     double b0 = 96.4852558;
     double v0 = 2.41e6;
     double d = 500;

@@ -15,22 +15,22 @@ execute: 1p 2p
 2p:
 	./main.out eul int 2 32000 50
 	./main.out eul non 2 32000 50
-	./main.out rk4 int 2 50 32000
-	./main.out rk4 non 2 50 32000
+	./main.out rk4 int 2 32000 50
+	./main.out rk4 non 2 32000 50
 	python3 plot_2p.py eul non 32000
 	python3 plot_2p.py eul int 32000
 	python3 plot_2p.py rk4 non 32000
 	python3 plot_2p.py rk4 int 32000
 
 1p_err:
-	./main.out rk4 non 1 4000 5
-	./main.out rk4 non 1 8000 5
-	./main.out rk4 non 1 16000 5
-	./main.out rk4 non 1 32000 5
+	./main.out rk4 non 1 4000 50
+	./main.out rk4 non 1 8000 50
+	./main.out rk4 non 1 16000 50
+	./main.out rk4 non 1 32000 50
 	python3 plot_rel_error.py rk4
 
-	./main.out eul non 1 4000 5
-	./main.out eul non 1 8000 5
-	./main.out eul non 1 16000 5
-	./main.out eul non 1 32000 5
+	./main.out eul non 1 4000 50
+	./main.out eul non 1 8000 50
+	./main.out eul non 1 16000 50
+	./main.out eul non 1 32000 50
 	python3 plot_rel_error.py eul

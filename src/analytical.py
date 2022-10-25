@@ -2,10 +2,10 @@ import numpy as np
 
 
 def analytical(step_size):
-    MAX_TIME = 5
+    MAX_TIME = 50
 
     q = 1
-    m = 1
+    m = 40
     B0 = 96.5
     v0 = 25
     vod2 = 9.65 # V_0/d^2
