@@ -2,6 +2,7 @@ from plotting import set_paras, make_dir
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import os
 
 
 
@@ -79,3 +80,38 @@ def plt_xy():
 
 
 plt_xy()
+
+
+
+def plt_xyz():
+	ax = plt.figure().add_subplot(projection='3d')
+	for part_id in range(n_parts):
+		data = pd.read_csv('textfiles/rk4_int_' + str(part_id) + '.txt', header=None)
+		ax.plot(data[1], data[2], data[3], label='Particle '+str(part_id + 1))
+
+	full_path = os.path.join(file_dir, "xyz_int")
+	plt.title('Trajectory in 3D plane with interactions')
+	ax.set_xlabel('x')
+	ax.set_ylabel('y')
+	ax.set_zlabel('z')
+	plt.legend()
+	plt.savefig(full_path)
+	plt.close()
+
+
+	ax = plt.figure().add_subplot(projection='3d')
+	for part_id in range(n_parts):
+		data = pd.read_csv('textfiles/rk4_non_' + str(part_id) + '.txt', header=None)
+		ax.plot(data[1], data[2], data[3], label='Particle '+str(part_id + 1))
+
+	full_path = os.path.join(file_dir, "xyz_non")
+	plt.title('Trajectory in 3D plane without interactions')
+	ax.set_xlabel('x')
+	ax.set_ylabel('y')
+	ax.set_zlabel('z')
+	plt.legend()
+	plt.savefig(full_path)
+	plt.close()
+
+
+plt_xyz()
