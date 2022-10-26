@@ -48,14 +48,14 @@ execute: 1p 2p 1p_err
 	./main.out eul non 1 32000 50 0
 	python3 plot_rel_error.py eul
 
-100p(caution):
-	./main.out rk4 non 100 40000 500 0.1
-	./main.out rk4 non 100 40000 500 0.4
-	./main.out rk4 non 100 40000 500 0.7
-	python3 plot_100p.py
+100p:
+	./main.out eul non 100 40000 500 0.1
+	./main.out eul non 100 40000 500 0.4
+	./main.out eul non 100 40000 500 0.7
+	python3 plot_100p.py 500
 
 test_eul:
-	./main.out eul non 10 40000 500 0.1
-	./main.out eul non 10 40000 500 0.4
-	./main.out eul non 10 40000 500 0.7
-	python3 plot_100p.py
+	./main.out eul non 10 40000 100 0.1
+	./main.out eul non 10 40000 100 0.4
+	./main.out eul non 10 40000 100 0.7
+	python3 plot_100p.py 100

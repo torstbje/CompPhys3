@@ -62,7 +62,7 @@ int main(int argc, char const *argv[]){
 
 
     double q = 1.;
-    double m = 40.;
+    double m = 40.078;
     double b0 = 96.4852558;
     double v0 = 2.41e6;
     double d = 500;
@@ -82,12 +82,11 @@ int main(int argc, char const *argv[]){
         double wv = 0.2;
         double dwv = 0.02;
 
-        total_t = 500;
 
         std::ofstream outfile;
         std::string filename = "textfiles/p_frac_" + std::to_string(int(total_t)) + "_0." + std::to_string(int(f*10)) + ".txt";
         outfile.open(filename);
-        while (wv <= 2.5) {
+        while (wv < 2.5) {
             PenningTrap new_trap = PenningTrap(b0, v0, d, is_interact, method, f, wv);
             add_rand_parts(new_trap, n_part, q, m);
             double part_frac = time_evo_resonance(new_trap, total_t, n_steps);
