@@ -39,6 +39,7 @@ def file_handling(filename=None,file_dir='plots',has_label=False):
         full_path = os.path.join(file_dir, filename)
         rcParams.update({'figure.autolayout': True})
         plt.savefig(full_path)
-        plt.close()
+        # plt.close()
+        plt.show()
     else:
         plt.show()

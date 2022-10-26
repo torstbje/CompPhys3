@@ -73,9 +73,6 @@ int main(int argc, char const *argv[]){
         
         PenningTrap trap = make_test_trap(n_part, q, m, b0, v0, d, f, 0, is_interact, method);
         
-        // test: counts particles
-        
-        
         // Evolve system and write to files
         time_evo(trap, total_t, n_steps);
     }
@@ -172,6 +169,8 @@ double time_evo_resonance(PenningTrap trap, double total_t, int n_steps) {
 
         trap.evolve(dt, curr_t);
         
+        double part_frac = trap.count_particles()/double(n_part);
+        std::cout << part_frac << " ";
         curr_t += dt;
     }
     

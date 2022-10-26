@@ -44,6 +44,7 @@ PenningTrap::PenningTrap(double b0, double v0, double d, std::string is_interact
     } else {
         evolve_func = &PenningTrap::evolve_RK4;
     }
+
 }
 
 void PenningTrap::add_particle(Particle p_in){
