@@ -1,8 +1,7 @@
 import numpy as np
 
 
-def analytical(step_size):
-    MAX_TIME = 50
+def analytical(step_size,t):
 
     q = 1
     m = 40
@@ -22,9 +21,8 @@ def analytical(step_size):
     Am = -(v0+wp*x0)/(wm-wp)
 
     r = np.empty((step_size,3))
-    t = np.arange(0,MAX_TIME,MAX_TIME/(step_size))
     r[:,0] = Ap*np.cos(-wp*t)+Am*np.cos(-wm*t)
     r[:,1] = Ap*np.sin(-wp*t)+Am*np.sin(-wm*t)
     r[:,2] = np.cos(wz*t)
 
-    return t, r
+    return r

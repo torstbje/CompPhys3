@@ -49,8 +49,8 @@ execute: 1p 2p 1p_err
 	python3 plot_rel_error.py eul
 
 test:
-#	./main.out eul non 100 40000 500 0.1
-	./main.out rk4 non 100 40000 500 0.1
+#	./main.out eul non 100 4000 500 0.1
+	./main.out rk4 non 100 4000 500 0.1
 	./main.out rk4 non 100 40000 500 0.4
 	./main.out rk4 non 100 40000 500 0.7
 	python3 plot_100p.py

@@ -210,9 +210,9 @@ void PenningTrap::evolve_RK4(double dt, double t){
 
     for (int i = 0; i < N; i++){
 
-        particles[i].pos = particles_copy[i].pos + (k1r[i] + 2*k2r[i] + 2*k3r[i] + k4r[i]) * dt / 6;
+        particles[i].pos = particles_copy[i].pos + (k1r[i] + 2*k2r[i] + 2*k3r[i] + k4r[i]) * (dt / 6);
         // update velocity
-        particles[i].vel = particles_copy[i].vel + (k1v[i] + 2*k2v[i] + 2*k3v[i] + k4v[i]) * dt / 6;
+        particles[i].vel = particles_copy[i].vel + (k1v[i] + 2*k2v[i] + 2*k3v[i] + k4v[i]) * (dt / 6);
     }
 }
 
