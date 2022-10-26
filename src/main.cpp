@@ -169,8 +169,8 @@ double time_evo_resonance(PenningTrap trap, double total_t, int n_steps) {
 
         trap.evolve(dt, curr_t);
         
-        double part_frac = trap.count_particles()/double(n_part);
-        std::cout << part_frac << " ";
+//        double part_frac = trap.count_particles()/double(n_part);
+//        std::cout << part_frac << " ";
         curr_t += dt;
     }
     
