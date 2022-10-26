@@ -47,8 +47,8 @@ area = 5**2
 
 plt.plot(p1[0],p1[1],label='Particle 1',lw=1)
 plt.plot(p2[0],p2[1],label='Particle 2',lw=1)
-plt.scatter([p1[0][0],p2[0][0]], [p1[1][0],p2[1][0]],s=area,c=['#1f77b4','#ff7f0e'],marker='^', alpha=0.75)
-plt.scatter([p1[0][len(p1[0])-1],p2[0][len(p2[0])-1]], [p1[1][len(p1[1])-1],p2[1][len(p2[1])-1]],s=area,c=['#1f77b4','#ff7f0e'],marker='o', alpha=0.75)
+plt.scatter([p1[0][0],p2[0][0]], [p1[1][0],p2[1][0]],s=area,c=['#1f77b4','#ff7f0e'],marker='o', alpha=0.75)
+plt.scatter([p1[0][len(p1[0])-1],p2[0][len(p2[0])-1]], [p1[1][len(p1[1])-1],p2[1][len(p2[1])-1]],s=area,c=['#1f77b4','#ff7f0e'],marker='^', alpha=0.75)
 plt.axis('equal')
 set_paras('x($\mu m$)','y($\mu m$)','Trajectory in x-y plane ' + info, 'xy_' + output_name, has_label=True)
 
@@ -56,16 +56,16 @@ set_paras('x($\mu m$)','y($\mu m$)','Trajectory in x-y plane ' + info, 'xy_' + o
 # plot phase space in x direction
 plt.plot(p1[0],p1[3],label='Particle 1',lw=1)
 plt.plot(p2[0],p2[3],label='Particle 2',lw=1)
-plt.scatter([p1[0][0],p2[0][0]], [p1[3][0],p2[3][0]],s=area,c=['#1f77b4','#ff7f0e'],marker='^', alpha=0.75)
-plt.scatter([p1[0][len(p1[0])-1],p2[0][len(p2[0])-1]], [p1[3][len(p1[3])-1],p2[3][len(p2[3])-1]],s=area,c=['#1f77b4','#ff7f0e'],marker='o', alpha=0.75)
+plt.scatter([p1[0][0],p2[0][0]], [p1[3][0],p2[3][0]],s=area,c=['#1f77b4','#ff7f0e'],marker='o', alpha=0.75)
+plt.scatter([p1[0][len(p1[0])-1],p2[0][len(p2[0])-1]], [p1[3][len(p1[3])-1],p2[3][len(p2[3])-1]],s=area,c=['#1f77b4','#ff7f0e'],marker='^', alpha=0.75)
 set_paras('position($\mu m$)','velocity($m/s$)','Phase space trajectory in x-direction ' + info,'x_phase_' + output_name, has_label=True)
 
 
 # plot phase space in z direction
 plt.plot(p1[2],p1[4],label='Particle 1',lw=1)
 plt.plot(p2[2],p2[4],label='Particle 2',lw=1)
-plt.scatter([p1[2][0],p2[2][0]], [p1[4][0],p2[4][0]],s=area,c=['#1f77b4','#ff7f0e'],marker='^', alpha=0.75)
-plt.scatter([p1[2][len(p1[2])-1],p2[2][len(p2[2])-1]], [p1[4][len(p1[4])-1],p2[4][len(p2[4])-1]],s=area,c=['#1f77b4','#ff7f0e'],marker='o', alpha=0.75)
+plt.scatter([p1[2][0],p2[2][0]], [p1[4][0],p2[4][0]],s=area,c=['#1f77b4','#ff7f0e'],marker='o', alpha=0.75)
+plt.scatter([p1[2][len(p1[2])-1],p2[2][len(p2[2])-1]], [p1[4][len(p1[4])-1],p2[4][len(p2[4])-1]],s=area,c=['#1f77b4','#ff7f0e'],marker='^', alpha=0.75)
 set_paras('position($\mu m$)','velocity($m/s$)','Phase space trajectory in z-direction ' + info,'z_phase_' + output_name, has_label=True)
 
 
