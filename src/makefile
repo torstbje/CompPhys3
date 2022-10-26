@@ -51,6 +51,6 @@ execute: 1p 2p 1p_err
 test:
 #	./main.out eul non 100 40000 500 0.1
 	./main.out rk4 non 100 40000 500 0.1
-	./main.out rk4 non 100 3200 500 0.4
-	./main.out rk4 non 100 3200 500 0.7
+	./main.out rk4 non 100 40000 500 0.4
+	./main.out rk4 non 100 40000 500 0.7
 	python3 plot_100p.py
