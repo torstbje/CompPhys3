@@ -5,8 +5,21 @@
 #include "headers/PenningTrap.hpp"
 
 
+double vec_abs(arma::vec r) {
+    return sqrt(r[0]*r[0]+r[1]*r[1]+r[2]*r[2]);
+}
 
-PenningTrap::PenningTrap(double b0, double v0, double d, std::string is_interact, std::string method){
+PenningTrap::PenningTrap() {
+    
+    mag_field_strength = 0;
+    potential = 0;
+    dim = 0;
+    file_string = "";
+    f = 0;
+    wv = 0;
+}
+
+PenningTrap::PenningTrap(double b0, double v0, double d, std::string is_interact, std::string method, double amplitude, double w_v){
     /*
     Initializer for PenningTrap class
     */
@@ -14,6 +27,8 @@ PenningTrap::PenningTrap(double b0, double v0, double d, std::string is_interact
     potential = v0;
     dim = d;
     file_string = "textfiles/" + method + "_" + is_interact + "_";
+    f = amplitude;
+    wv = w_v;
 
     // This block decides which forces are used for the system
     if (is_interact == "int"){
@@ -38,13 +53,20 @@ void PenningTrap::add_particle(Particle p_in){
     particles.push_back(p_in);
 }
 
-arma::vec PenningTrap::external_E_field(arma::vec r){
+arma::vec PenningTrap::external_E_field(arma::vec r, double t){
     /*
     Evaluates external electric field at given coordinates
     */
-
+    arma::vec e_field(3);
+    if (vec_abs(r) > dim) {
+        e_field[0] = 0;
+        e_field[1] = 0;
+        e_field[2] = 0;
+    }
+    
     double v0_d2 = 9.65;
-    arma::vec e_field = r*v0_d2;
+    v0_d2 *= 1+f*cos(wv*t);
+    e_field = r*v0_d2;
     e_field[2] *= -2;
     return e_field;
 }
@@ -54,6 +76,11 @@ arma::vec PenningTrap::external_B_field(arma::vec r){
     Evaluates external magnetic field at given coordinates
     */
     arma::vec b_field(3);
+    if (vec_abs(r) > dim) {
+        b_field[0] = 0;
+        b_field[1] = 0;
+        b_field[2] = 0;
+    }
     b_field[2] = mag_field_strength;
     return b_field;
 }
@@ -69,12 +96,13 @@ arma::vec PenningTrap::force_particle(int i, int j){
     return force;
 }
 
-arma::vec PenningTrap::total_force_external(int i){
+arma::vec PenningTrap::total_force_external(int i, double t){
     /*
     Evaluates force from external electric and magnetic fields for a given particle
     */
+    
     Particle p = particles[i];
-    arma::vec e_field = external_E_field(p.pos);
+    arma::vec e_field = external_E_field(p.pos, t);
     arma::vec b_field = external_B_field(p.pos);
     arma::vec ext_force = p.charge*(e_field + arma::cross(p.vel, b_field));
     return ext_force;
@@ -93,24 +121,24 @@ arma::vec PenningTrap::total_force_particles(int i){
     return int_force;
 }
 
-arma::vec PenningTrap::combine_force(int i){
+arma::vec PenningTrap::combine_force(int i,double t){
     /*
     Evaluates force on a given particle from interactions with all other particles in the system
     */
-    return total_force_external(i) + total_force_particles(i);
+    return total_force_external(i,t) + total_force_particles(i);
 }
 
-arma::vec PenningTrap::total_force(int i){
+arma::vec PenningTrap::total_force(int i, double t){
     /*
     Evaluates the relevant forces for particle i.
     Method for relevant forces is declared at initialization.
     One of 'combine_force' or 'total_force_external' is used.
     */
 
-    return (this->*force_func)(i);
+    return (this->*force_func)(i, t);
 }
 
-void PenningTrap::evolve_Euler(double dt) {
+void PenningTrap::evolve_Euler(double dt, double t) {
     /*
      Evolves the system one timestep dt with the 'Euler' method
      */
@@ -119,11 +147,11 @@ void PenningTrap::evolve_Euler(double dt) {
         // update position
         particles[i].pos += particles[i].vel*dt;
         // update velocity
-        particles[i].vel += total_force(i) / particles[i].mass * dt;
+        particles[i].vel += total_force(i, t) / particles[i].mass * dt;
     }
 }
 
-void PenningTrap::evolve_RK4(double dt){
+void PenningTrap::evolve_RK4(double dt, double t){
     /*
     Evolves the system one timestep dt with the 'RungeKutta4' method
     */
@@ -144,7 +172,7 @@ void PenningTrap::evolve_RK4(double dt){
 
         // k1
         k1r.push_back(particles_copy[i].vel);
-        k1v.push_back(total_force(i)/particles_copy[i].mass);
+        k1v.push_back(total_force(i, t)/particles_copy[i].mass);
 
         // update the copied particles possitions
         particles_copy[i].pos += k1r[i] * dt/2;
@@ -156,7 +184,7 @@ void PenningTrap::evolve_RK4(double dt){
 
         // k2
         k2r.push_back(particles_copy[i].vel);
-        k2v.push_back(total_force(i)/particles[i].mass);
+        k2v.push_back(total_force(i, t)/particles[i].mass);
         particles_copy[i].pos += k2r[i] * dt/2;
         particles_copy[i].vel += k2v[i] * dt/2;
 
@@ -167,7 +195,7 @@ void PenningTrap::evolve_RK4(double dt){
 
         // k3
         k3r.push_back(particles_copy[i].vel);
-        k3v.push_back(total_force(i)/particles[i].mass);
+        k3v.push_back(total_force(i, t)/particles[i].mass);
         particles_copy[i].pos += k3r[i] * dt;
         particles_copy[i].vel += k3v[i] * dt;
     }
@@ -176,7 +204,7 @@ void PenningTrap::evolve_RK4(double dt){
 
         // k4
         k4r.push_back(particles_copy[i].vel);
-        k4v.push_back(total_force(i)/particles[i].mass);
+        k4v.push_back(total_force(i, t)/particles[i].mass);
     }
 
     for (int i = 0; i < N; i++){
@@ -187,12 +215,22 @@ void PenningTrap::evolve_RK4(double dt){
     }
 }
 
-void PenningTrap::evolve(double dt){
+void PenningTrap::evolve(double dt, double t){
     /*
     Evolves the system one timestep dt
     Evolve method is declared at initialization of 'this'.
     One of 'evolve_Euler' or 'evolve_RK4' is used.
     */
 
-    (this->*evolve_func)(dt);
+    (this->*evolve_func)(dt, t);
+}
+
+int PenningTrap::count_particles() {
+    int intrap_count = 0;
+    for (int i=0;i<int(particles.size()) ;i++) {
+        if (vec_abs(particles[i].pos)<dim) {
+            intrap_count++;
+        }
+    }
+    return intrap_count;
 }

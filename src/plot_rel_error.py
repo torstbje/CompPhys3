@@ -24,4 +24,4 @@ for steps in step_sizes:
     max_diff.append(max(diff))
 
 error_converge = sum([np.log(max_diff[i+1]/max_diff[i])/np.log(step_sizes[i+1]/step_sizes[i]) for i in range(3)])/3
-set_paras('t($\mu s$)','Error','Relative error in position. Error convergence: %.4f' % (error_converge), 'rel_error_' + method + '_', has_label = True)
+set_paras('t($\mu s$)','Error','Relative error in position. Error convergence: %.4f' % (error_converge), 'rel_error_' + method + '_' + '.pdf', has_label = True)

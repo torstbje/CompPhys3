@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+from matplotlib import rcParams
 import os
 
 def set_paras(x_lab,y_lab,title=None,filename=None,file_dir='plots',has_label=False):
@@ -36,6 +37,7 @@ def file_handling(filename=None,file_dir='plots',has_label=False):
     # Saves or shows file
     if filename:
         full_path = os.path.join(file_dir, filename)
+        rcParams.update({'figure.autolayout': True})
         plt.savefig(full_path)
         plt.close()
     else:
