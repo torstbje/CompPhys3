@@ -79,12 +79,12 @@ int main(int argc, char const *argv[]){
     else {
 
         // time-dependent trap
-        double wv = 0.2;
+        double wv = 2.3;
         double dwv = 0.02;
 
 
         std::ofstream outfile;
-        std::string filename = "textfiles/p_frac_" + std::to_string(int(total_t)) + "_0." + std::to_string(int(f*10)) + ".txt";
+        std::string filename = "textfiles/p_frac_" + is_interact +std::to_string(int(total_t)) + "_0." + std::to_string(int(f*10)) + ".txt";
         outfile.open(filename);
         while (wv < 2.5) {
             PenningTrap new_trap = PenningTrap(b0, v0, d, is_interact, method, f, wv);
@@ -163,13 +163,9 @@ double time_evo_resonance(PenningTrap trap, double total_t, int n_steps) {
     int n_part = int(trap.particles.size());
     double curr_t = 0;
 
-    // TODO: write particle_count vs time
     for (int i=1; i < n_steps; i++) {
 
         trap.evolve(dt, curr_t);
-
-//        double part_frac = trap.count_particles()/double(n_part);
-//        std::cout << part_frac << " ";
         curr_t += dt;
     }
 

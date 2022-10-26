@@ -62,7 +62,7 @@ arma::vec PenningTrap::external_E_field(arma::vec r, double t){
     arma::vec e_field(3);
 
     double v0_d2 = 9.65;
-    v0_d2 *= 1+f*cos(wv*t);
+    v0_d2 *= (1+f*cos(wv*t));
     e_field = r*v0_d2;
     e_field[2] *= -2;
     return e_field;
