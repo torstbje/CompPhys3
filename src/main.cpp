@@ -47,13 +47,13 @@ int main(int argc, char const *argv[]){
     int n_steps = atoi(argv[4]);
     double total_t = std::stod(argv[5]);
     double f = atof(argv[6]);
-    
+
 
     if (0 != f && 0.1 != f && 0.4 != f && 0.7 != f) {
         std::cout << "Incorrect value for f, choose from (0, 0.1, 0.4, 0.7)! \n";
         return ERR_INVALID_fVALUE;
     }
-    
+
 
     if (n_part < 1){
         std::cout << "System requires at least 1 particle! \n";
@@ -70,20 +70,20 @@ int main(int argc, char const *argv[]){
 
     // Simulation
     if (n_part < 3) {
-        
+
         PenningTrap trap = make_test_trap(n_part, q, m, b0, v0, d, f, 0, is_interact, method);
-        
+
         // Evolve system and write to files
         time_evo(trap, total_t, n_steps);
     }
     else {
-        
+
         // time-dependent trap
         double wv = 0.2;
         double dwv = 0.02;
 
         total_t = 500;
-        
+
         std::ofstream outfile;
         std::string filename = "textfiles/p_frac_" + std::to_string(int(total_t)) + "_0." + std::to_string(int(f*10)) + ".txt";
         outfile.open(filename);
@@ -91,13 +91,13 @@ int main(int argc, char const *argv[]){
             PenningTrap new_trap = PenningTrap(b0, v0, d, is_interact, method, f, wv);
             add_rand_parts(new_trap, n_part, q, m);
             double part_frac = time_evo_resonance(new_trap, total_t, n_steps);
-            
+
             outfile << wv << "," << part_frac << std::endl;
             wv += dwv;
         }
         outfile.close();
     }
-    
+
 
 
 
@@ -138,7 +138,7 @@ PenningTrap make_test_trap(int n_part, double q, double m, double b0, double v0,
 }
 
 void add_rand_parts(PenningTrap& trap, int n, double q, double m) {
-    
+
     /*  adds n particles inside the trap
      input:
      trap: trap in which the particles should be added
@@ -159,24 +159,24 @@ double time_evo_resonance(PenningTrap trap, double total_t, int n_steps) {
      total_t: total run time
      n_steps: number of steps run
      return: fraction of particles still left in the trap after total_t*/
-    
+
     double dt = total_t/n_steps;
     int n_part = int(trap.particles.size());
     double curr_t = 0;
-    
+
     // TODO: write particle_count vs time
     for (int i=1; i < n_steps; i++) {
 
         trap.evolve(dt, curr_t);
-        
+
 //        double part_frac = trap.count_particles()/double(n_part);
 //        std::cout << part_frac << " ";
         curr_t += dt;
     }
-    
+
     return trap.count_particles()/double(n_part);
 }
-    
+
 
 // can be moved elsewhere
 void time_evo(PenningTrap& trap, double total_t, int n_steps) {
@@ -189,23 +189,25 @@ void time_evo(PenningTrap& trap, double total_t, int n_steps) {
      */
 
     double dt = total_t/n_steps;
+    double curr_t = 0;
     int n_part = int(trap.particles.size());
-    
+
     std::vector<std::ofstream> outfiles;
 
     // Make outfiles and write initial values
     for (int j=0; j<n_part; j++) {
         outfiles.emplace_back(std::ofstream{ trap.file_string + std::to_string(n_steps) + '_'+ std::to_string(j) + ".txt" });
-        outfiles[j] << 0 << trap.particles[j].get_string() << std::endl;
+        outfiles[j] << curr_t << trap.particles[j].get_string() << std::endl;
     }
 
+
     // Update trap and write data to file
-    for (int i=1; i < n_steps;i++) {
+    for (int i=0; i < n_steps;i++) {
 
-        trap.evolve(dt, 0);
-
+        trap.evolve(dt, curr_t);
+        curr_t += dt;
         for (int j=0; j<n_part; j++) {
-            outfiles[j] << i*dt << trap.particles[j].get_string() << std::endl;
+            outfiles[j] << curr_t << trap.particles[j].get_string() << std::endl;
         }
 
     }

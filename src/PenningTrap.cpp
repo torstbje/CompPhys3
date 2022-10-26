@@ -54,6 +54,7 @@ void PenningTrap::add_particle(Particle p_in){
     particles.push_back(p_in);
 }
 
+
 arma::vec PenningTrap::external_E_field(arma::vec r, double t){
     /*
     Evaluates external electric field at given coordinates
@@ -161,27 +162,31 @@ void PenningTrap::evolve_RK4(double dt, double t){
     std::vector<arma::vec> k1r, k2r, k3r, k4r;
     std::vector<arma::vec> k1v, k2v, k3v, k4v;
 
-
+    double half_dt = dt/2;
     // calculates the k's for r and v
     for (int i = 0; i < N; i++){
 
         // k1
-        k1r.push_back(particles_copy[i].vel);
-        k1v.push_back(total_force(i, t)/particles_copy[i].mass);
+        k1r.push_back(particles[i].vel);
+        k1v.push_back(total_force(i, t)/particles[i].mass);
+
 
         // update the copied particles possitions
-        particles_copy[i].pos += k1r[i] * dt/2;
-        particles_copy[i].vel += k1v[i] * dt/2;
+        particles[i].pos = particles_copy[i].pos + k1r[i] * half_dt;
+        particles[i].vel = particles_copy[i].vel + k1v[i] * half_dt;
+
 
     }
 
      for (int i = 0; i < N; i++){
 
         // k2
-        k2r.push_back(particles_copy[i].vel);
-        k2v.push_back(total_force(i, t)/particles[i].mass);
-        particles_copy[i].pos += k2r[i] * dt/2;
-        particles_copy[i].vel += k2v[i] * dt/2;
+        k2r.push_back(particles[i].vel);
+        k2v.push_back(total_force(i, t + half_dt)/particles[i].mass);
+
+        particles[i].pos = particles_copy[i].pos + k2r[i] * half_dt;
+        particles[i].vel = particles_copy[i].vel + k2v[i] * half_dt;
+
 
     }
 
@@ -189,24 +194,25 @@ void PenningTrap::evolve_RK4(double dt, double t){
     for (int i=0;i<N;i++) {
 
         // k3
-        k3r.push_back(particles_copy[i].vel);
-        k3v.push_back(total_force(i, t)/particles[i].mass);
-        particles_copy[i].pos += k3r[i] * dt;
-        particles_copy[i].vel += k3v[i] * dt;
+        k3r.push_back(particles[i].vel);
+        k3v.push_back(total_force(i, t + half_dt)/particles[i].mass);
+
+        particles[i].pos = particles_copy[i].pos + k3r[i] * dt;
+        particles[i].vel = particles_copy[i].vel + k3v[i] * dt;
     }
 
     for (int i=0;i<N;i++) {
 
         // k4
-        k4r.push_back(particles_copy[i].vel);
-        k4v.push_back(total_force(i, t)/particles[i].mass);
+        k4r.push_back(particles[i].vel);
+        k4v.push_back(total_force(i, t + dt)/particles[i].mass);
     }
 
     for (int i = 0; i < N; i++){
 
-        particles[i].pos += (k1r[i] + 2*k2r[i] + 2*k3r[i] + k4r[i]) * dt / 6;
+        particles[i].pos = particles_copy[i].pos + (k1r[i] + 2*k2r[i] + 2*k3r[i] + k4r[i]) * dt / 6;
         // update velocity
-        particles[i].vel += (k1v[i] + 2*k2v[i] + 2*k3v[i] + k4v[i]) * dt / 6;
+        particles[i].vel = particles_copy[i].vel + (k1v[i] + 2*k2v[i] + 2*k3v[i] + k4v[i]) * dt / 6;
     }
 }
 
