@@ -59,11 +59,6 @@ arma::vec PenningTrap::external_E_field(arma::vec r, double t){
     Evaluates external electric field at given coordinates
     */
     arma::vec e_field(3);
-    if (vec_abs(r) > dim) {
-        e_field[0] = 0;
-        e_field[1] = 0;
-        e_field[2] = 0;
-    }
     
     double v0_d2 = 9.65;
     v0_d2 *= 1+f*cos(wv*t);
@@ -77,11 +72,6 @@ arma::vec PenningTrap::external_B_field(arma::vec r){
     Evaluates external magnetic field at given coordinates
     */
     arma::vec b_field(3);
-    if (vec_abs(r) > dim) {
-        b_field[0] = 0;
-        b_field[1] = 0;
-        b_field[2] = 0;
-    }
     b_field[2] = mag_field_strength;
     return b_field;
 }
@@ -93,7 +83,7 @@ arma::vec PenningTrap::force_particle(int i, int j){
     const double k_e = 1.38935333e5;
     arma::vec diff = particles[i].pos - particles[j].pos;
     // distance(3) between ith and jth particle
-    arma::vec force = k_e * particles[i].charge * particles[j].charge * diff/(pow(abs(diff),3));
+    arma::vec force = k_e * particles[i].charge * particles[j].charge * diff/(pow(vec_abs(diff),3));
     return force;
 }
 
@@ -101,11 +91,14 @@ arma::vec PenningTrap::total_force_external(int i, double t){
     /*
     Evaluates force from external electric and magnetic fields for a given particle
     */
-    
+
+    if (vec_abs(particles[i].pos) > dim)
+        return arma::vec(3);
     Particle p = particles[i];
     arma::vec e_field = external_E_field(p.pos, t);
     arma::vec b_field = external_B_field(p.pos);
     arma::vec ext_force = p.charge*(e_field + arma::cross(p.vel, b_field));
+    
     return ext_force;
 }
 
