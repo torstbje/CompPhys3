@@ -29,11 +29,11 @@ execute: 1p 2p 1p_err
 	python3 plot_2p.py eul int 32000
 
 2p_rk4:
-	./main.out rk4 int 2 32000 500 0.7
-	./main.out rk4 non 2 32000 500 0.4
+	./main.out rk4 int 2 32000 500 0
+	./main.out rk4 non 2 32000 500 0
 	python3 plot_2p.py rk4 non 32000
 	python3 plot_2p.py rk4 int 32000
-	
+
 
 1p_err:
 	./main.out rk4 non 1 4000 50 0
@@ -49,8 +49,8 @@ execute: 1p 2p 1p_err
 	python3 plot_rel_error.py eul
 
 test:
-	./main.out eul non 100 40000 500 0.1
+	./main.out eul non 2 40000 500 0.1
 #	./main.out eul non 2 40000 500 0.1
 #	./main.out eul non 5 3200 500 0.4
 #	./main.out rk4 non 5 3200 500 0.7
-	python3 plot_100p.py
+#	python3 plot_100p.py
