@@ -21,8 +21,8 @@ def analytical(step_size):
     Ap = (v0+wm*x0)/(wm-wp)
     Am = -(v0+wp*x0)/(wm-wp)
 
-    r = np.empty((step_size+1,3))
-    t = np.arange(0,MAX_TIME,MAX_TIME/(step_size+1))
+    r = np.empty((step_size,3))
+    t = np.arange(0,MAX_TIME,MAX_TIME/(step_size))
     r[:,0] = Ap*np.cos(-wp*t)+Am*np.cos(-wm*t)
     r[:,1] = Ap*np.sin(-wp*t)+Am*np.sin(-wm*t)
     r[:,2] = np.cos(wz*t)

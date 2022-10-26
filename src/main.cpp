@@ -202,7 +202,7 @@ void time_evo(PenningTrap& trap, double total_t, int n_steps) {
 
 
     // Update trap and write data to file
-    for (int i=0; i < n_steps;i++) {
+    for (int i=1; i < n_steps;i++) {
 
         trap.evolve(dt, curr_t);
         curr_t += dt;
